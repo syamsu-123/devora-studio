@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="id" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>NAMA STUDIO — Web Development Studio</title>
+    <meta
+      name="description"
+      content="NAMA STUDIO membangun website modern, cepat, dan berkualitas untuk UMKM, klinik, kontraktor, sekolah, dan distributor. Dari konsep hingga deployment, semua kami urus."
+    />
+    <meta name="theme-color" content="#05060e" />
+    <meta name="color-scheme" content="dark light" />
+
+    <!-- Terapkan tema sebelum halaman digambar supaya tidak ada kedipan warna. -->
+    <script>
+      ;(function () {
+        try {
+          var saved = localStorage.getItem('studio-theme')
+          var next = saved === 'light' ? 'light' : 'dark'
+          document.documentElement.setAttribute('data-theme', next)
+        } catch (error) {
+          document.documentElement.setAttribute('data-theme', 'dark')
+        }
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

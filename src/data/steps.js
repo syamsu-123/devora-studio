@@ -1,0 +1,53 @@
+// Empat tahap pengerjaan, ditulis sebagai riwayat commit supaya urutannya jelas.
+// Ganti `commit`, `hash`, dan `date` dengan contoh proyek Anda bila perlu.
+
+export const STEPS = [
+  {
+    id: 'brief',
+    n: 1,
+    hash: 'a1f3c9d',
+    ref: 'main',
+    date: '2 Sep',
+    commit: 'feat: brief singkat dari calon klien',
+    title: 'Brief 30 menit',
+    desc: 'Anda menjawab enam pertanyaan tentang bisnis, pelanggan, dan halaman yang paling perlu ada.',
+    output: 'Dokumen 1 halaman: tujuan situs, halaman wajib, contoh yang Anda sukai.',
+    duration: '1-2 hari',
+  },
+  {
+    id: 'rancangan',
+    n: 2,
+    hash: '7b2e004',
+    ref: 'main',
+    date: '4 Sep',
+    commit: 'docs: kunci harga dan jadwal pengerjaan',
+    title: 'Rancangan dan harga tetap',
+    desc: 'Kami kirim rancangan kasar, daftar halaman, harga, dan tanggal selesai sebelum mulai dikerjakan.',
+    output: 'Harga dikunci. Revisi rancangan maksimal dua kali.',
+    duration: '2-3 hari',
+  },
+  {
+    id: 'pengerjaan',
+    n: 3,
+    hash: '9c0d55a',
+    ref: 'staging',
+    date: '11 Sep',
+    commit: 'feat: bangun halaman + sambungkan pembayaran',
+    title: 'Pengerjaan',
+    desc: 'Anda dapat tautan pratinjau tiap dua atau tiga hari dan bisa memberi komentar langsung di halaman.',
+    output: 'Versi hampir selesai: semua halaman, formulir, dan pembayaran sudah tersambung.',
+    duration: '3-7 minggu',
+  },
+  {
+    id: 'serah-terima',
+    n: 4,
+    hash: 'e41a8b7',
+    ref: 'main',
+    date: '19 Sep',
+    commit: 'chore: rilis v1.0 + pelatihan untuk pemilik',
+    title: 'Serah terima dan pelatihan',
+    desc: 'Situs dipindahkan ke hosting Anda, lalu dilatih cara mengubah teks, foto, dan harga.',
+    output: 'Akun hosting, akses, dan video pelatihan. Perbaikan gratis 30 hari.',
+    duration: '1-2 hari',
+  },
+]

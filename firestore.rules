@@ -1,0 +1,101 @@
+rules_version = '2';
+
+/*
+ * Aturan akses untuk dua collection:
+ *   users/{uid}     → profil + role (admin | user)
+ *   messages/{id}   → kiriman form kontak
+ *
+ * Prinsipnya satu: dokumen users hanya bisa ditulis oleh pemiliknya, dan role
+ * 'admin' HANYA boleh diambil kalau email-nya ada di adminEmail(). Jadi siapa pun
+ * bisa mendaftar, tapi tidak ada yang bisa menaikkan dirinya sendiri jadi admin
+ * dari sisi klien.
+ *
+ * Sebelum deploy: ganti placeholder di adminEmail() dengan email asli Anda.
+ *
+ * Catatan penamaan: field 'service' tidak boleh dipakai — `service` adalah
+ * keyword tercadang di bahasa rules (dari `service cloud.firestore`), dan
+ * `d.service` akan gagal dikompilasi. Dipakai 'layanan' sebagai gantinya.
+ */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Email yang otomatis mendapat role admin saat mendaftar.
+    // Ganti nilai di bawah ini dengan email asli Anda.
+    function adminEmail() {
+      return request.auth.token.email in [
+        'admin@namastudio.example',
+      ];
+    }
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // Admin ditentukan dari dokumen profil, bukan dari klaim token, supaya
+    // mencabut akses cukup dengan mengubah satu dokumen.
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Form kontak sengaja bisa diakses tamu, jadi validasi isi (bukan identitas)
+    // yang menjadi pagar. Batas panjang mencegah satu dokumen dipakai menaruh
+    // file besar atau script.
+    function isValidMessage() {
+      return request.resource.data.keys().hasOnly([
+          'name', 'email', 'layanan', 'note', 'createdAt', 'userId'
+        ])
+        && request.resource.data.keys().hasAll([
+          'name', 'email', 'layanan', 'note', 'createdAt'
+        ])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 2
+        && request.resource.data.name.size() <= 80
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 120
+        && request.resource.data.layanan is string
+        && request.resource.data.layanan.size() <= 60
+        && request.resource.data.note is string
+        && request.resource.data.note.size() <= 1000
+        && request.resource.data.createdAt == request.time
+        && (
+          request.resource.data.userId == null
+          || (signedIn() && request.resource.data.userId == request.auth.uid)
+        );
+    }
+
+    match /users/{userId} {
+      // Dokumen sendiri bisa dibaca (untuk tahu role), admin bisa baca semua.
+      allow read: if isSelf(userId) || isAdmin();
+
+      // Satu-satunya jalan pembuatan dokumen. Field dibatasi supaya pengunjung
+      // tidak bisa menitipkan data aneh di profilnya sendiri.
+      allow create: if isSelf(userId)
+        && request.resource.data.keys().hasOnly(['email', 'displayName', 'role', 'createdAt'])
+        && request.resource.data.keys().hasAll(['email', 'role', 'createdAt'])
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.role in ['user', 'admin']
+        && (request.resource.data.role == 'user' || adminEmail());
+
+      // Umumnya hanya admin (untuk menaikkan role user lain). Pemilik dokumen
+      // boleh memperbarui displayName saja, tanpa menyentuh role.
+      allow update: if isAdmin()
+        || (isSelf(userId)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName']));
+
+      allow delete: if isAdmin();
+    }
+
+    match /messages/{messageId} {
+      allow create: if isValidMessage();
+      allow read, update, delete: if isAdmin();
+    }
+  }
+}

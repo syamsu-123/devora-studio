@@ -1,0 +1,925 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* Token warna/font per tema: utility seperti bg-surface, text-muted, border-line
+   mengikuti nilai di sini, jadi komponen tidak perlu menulis dark: satu per satu.
+   Dark = default (tema utama NAMA STUDIO), light = versi "daylight IDE". */
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-bg: #05060e;
+  --color-bg-deep: #02030a;
+  --color-surface: #080b16;
+  --color-surface-2: #0b0f1e;
+  --color-raised: #111728;
+  --color-text: #e9edfb;
+  --color-muted: #8b95b6;
+  --color-line: #1a2038;
+  --color-line-soft: #131829;
+
+  --color-primary: #4d7cff;
+  --color-violet: #9d5cff;
+  --color-cyan: #2ee6ff;
+  --color-signal: #ff8a3c;
+  --color-positive: #3ddc97;
+
+  --color-accent: var(--color-primary);
+  --color-accent-contrast: #03050d;
+  --color-accent-soft: rgb(77 124 255 / 0.14);
+
+  --color-glass: rgb(150 180 255 / 0.045);
+  --color-glass-2: rgb(150 180 255 / 0.09);
+  --color-glass-line: rgb(120 160 255 / 0.16);
+  --color-shadow: rgb(0 0 0 / 0.7);
+
+  --color-syn-key: #6ea8ff;
+  --color-syn-str: #3ddc97;
+  --color-syn-num: #b794ff;
+  --color-syn-fn: #2ee6ff;
+  --color-syn-dim: #626d8d;
+  --color-sel: rgb(77 124 255 / 0.32);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --color-bg: #e9edf6;
+  --color-bg-deep: #dde3f0;
+  --color-surface: #ffffff;
+  --color-surface-2: #f5f7fc;
+  --color-raised: #eef1f9;
+  --color-text: #0d1220;
+  --color-muted: #56617c;
+  --color-line: #ccd4e6;
+  --color-line-soft: #dde3ef;
+
+  --color-primary: #2f5df0;
+  --color-violet: #7c3aed;
+  --color-cyan: #0891b2;
+  --color-signal: #d9620c;
+  --color-positive: #12855a;
+
+  --color-accent: var(--color-primary);
+  --color-accent-contrast: #ffffff;
+  --color-accent-soft: rgb(47 93 240 / 0.12);
+
+  --color-glass: rgb(20 40 90 / 0.035);
+  --color-glass-2: rgb(20 40 90 / 0.06);
+  --color-glass-line: rgb(30 60 130 / 0.14);
+  --color-shadow: rgb(13 18 32 / 0.14);
+
+  --color-syn-key: #1d4ed8;
+  --color-syn-str: #12855a;
+  --color-syn-num: #7c3aed;
+  --color-syn-fn: #0891b2;
+  --color-syn-dim: #77839e;
+  --color-sel: #c7d7ff;
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-bg-deep: var(--color-bg-deep);
+  --color-surface: var(--color-surface);
+  --color-surface-2: var(--color-surface-2);
+  --color-raised: var(--color-raised);
+  --color-text: var(--color-text);
+  --color-muted: var(--color-muted);
+  --color-line: var(--color-line);
+  --color-line-soft: var(--color-line-soft);
+
+  --color-primary: var(--color-primary);
+  --color-violet: var(--color-violet);
+  --color-cyan: var(--color-cyan);
+  --color-signal: var(--color-signal);
+  --color-positive: var(--color-positive);
+
+  --color-accent: var(--color-accent);
+  --color-accent-contrast: var(--color-accent-contrast);
+  --color-accent-soft: var(--color-accent-soft);
+
+  --color-glass: var(--color-glass);
+  --color-glass-2: var(--color-glass-2);
+  --color-glass-line: var(--color-glass-line);
+  --color-shadow: var(--color-shadow);
+
+  --color-syn-key: var(--color-syn-key);
+  --color-syn-str: var(--color-syn-str);
+  --color-syn-num: var(--color-syn-num);
+  --color-syn-fn: var(--color-syn-fn);
+  --color-syn-dim: var(--color-syn-dim);
+  --color-sel: var(--color-sel);
+}
+
+@theme {
+  --font-sans: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    sans-serif;
+  --font-heading: 'Space Grotesk', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
+
+  /* Sudut siku-siku: ini ruang kerja, bukan katalog kartu rounded. */
+  --radius-xs: 0.125rem;
+  --radius-panel: 0.25rem;
+  --radius-window: 0.375rem;
+  --radius-chip: 0.25rem;
+
+  --shadow-panel: 0 1px 0 0 var(--color-glass-line) inset;
+  --shadow-raised: 0 1px 0 0 var(--color-glass-line) inset, 0 18px 40px -28px rgb(0 0 0 / 0.8);
+  --shadow-pop: 0 1px 0 0 var(--color-glass-line) inset, 0 40px 80px -40px rgb(0 0 0 / 0.9);
+
+  --animate-caret: caret 1.05s steps(1, end) infinite;
+  --animate-rise: rise 0.32s ease-out both;
+  --animate-pulse-dot: pulse-dot 2.4s ease-in-out infinite;
+
+  @keyframes caret {
+    0%,
+    49% {
+      opacity: 1;
+    }
+    50%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes pulse-dot {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.35;
+      transform: scale(0.72);
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Keyframe global. Keyframe di dalam @theme hanya ikut ter-emit kalau utility
+   --animate-* dipakai, jadi animasi nebula ditulis di sini agar selalu ada.
+   Semua hanya mengubah transform / opacity supaya jalan di compositor.
+--------------------------------------------------------------------------- */
+
+@keyframes neb-spin {
+  from {
+    transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+@keyframes neb-spin-y {
+  from {
+    transform: rotateY(0deg) rotateZ(0deg);
+  }
+  to {
+    transform: rotateY(360deg) rotateZ(360deg);
+  }
+}
+
+@keyframes neb-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.07);
+    opacity: 1;
+  }
+}
+
+/* Versi hemat: hanya opacity, dipakai untuk elemen yang punya blur/box-shadow
+   supaya tidak perlu raster ulang tiap frame. */
+@keyframes neb-fade {
+  0%,
+  100% {
+    opacity: 0.78;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Kawat inti: transform dasar ikut jadi satu keyframe supaya tidak ditimpa
+   oleh animasi (animasi menang atas inline style). */
+@keyframes neb-core-spin-a {
+  from {
+    transform: rotateY(0deg) rotateX(74deg) scale(1.3);
+  }
+  to {
+    transform: rotateY(360deg) rotateX(74deg) scale(1.3);
+  }
+}
+
+@keyframes neb-core-spin-b {
+  from {
+    transform: rotateX(0deg) rotateZ(0deg) scale(1.52);
+  }
+  to {
+    transform: rotateX(360deg) rotateZ(0deg) scale(1.52);
+  }
+}
+
+@keyframes neb-drift {
+  0%,
+  100% {
+    transform: var(--drift-a);
+  }
+  50% {
+    transform: var(--drift-b);
+  }
+}
+
+@keyframes neb-scan {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes star-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-2.5rem, 0, 0);
+  }
+}
+
+/* Debu holografis: menyala (opacity) + melayang (transform).
+   Kedua animasi sengaja memakai properti berbeda supaya tidak saling menimpa. */
+@keyframes neb-twinkle {
+  0%,
+  100% {
+    opacity: var(--twinkle-min, 0.18);
+  }
+  50% {
+    opacity: var(--twinkle-max, 1);
+  }
+}
+
+@keyframes neb-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(6px, -14px, 0);
+  }
+}
+
+@keyframes holo-glitch {
+  0%,
+  92%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  94% {
+    transform: translateY(-1.5px);
+    opacity: 0.7;
+  }
+  96% {
+    transform: translateY(1.5px);
+    opacity: 0.85;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Nebula: galaksi digital berbasis transform 3D CSS.
+   .nebula  → container + perspective (--ns = diameter dasar semua orbit)
+   .neb-scene → preserve-3d,Sorting kedalaman antararring dan core
+   .neb-ring  → diputar pada bidang datar
+   .neb-plane → dimiringkan (rotateX) sehingga orbit jadi elips → efek 3D
+   .neb-orb   → satu token kode di titik orbit
+--------------------------------------------------------------------------- */
+
+.nebula {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  aspect-ratio: 1 / 1;
+  margin-inline: auto;
+  perspective: 900px;
+  perspective-origin: 50% 46%;
+  container-type: inline-size;
+}
+
+/* --ns = diameter dasar semua orbit, mengikuti lebar kontainer (bukan viewport)
+   supaya nebula aman di sidebar sempit maupun di layar lebar. */
+.neb-scene {
+  --ns: clamp(170px, 86vw, 430px);
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+@supports (width: 1cqw) {
+  .neb-scene {
+    --ns: 92cqw;
+  }
+}
+
+/* Cahaya latar planetary: blur besar hanya dipakai di sini (1 lapis). */
+.neb-aura {
+  position: absolute;
+  inset: -18%;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgb(77 124 255 / 0.34) 0%,
+      rgb(157 92 255 / 0.18) 34%,
+      transparent 66%
+    );
+  filter: blur(28px);
+  animation: neb-fade 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.neb-ring,
+.neb-plane,
+.neb-orb {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.neb-ring {
+  animation: neb-spin var(--dur) linear infinite;
+  animation-direction: var(--dir, normal);
+}
+
+.neb-orb {
+  inset: auto;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: rotate(var(--a)) translateX(calc(var(--ns) * var(--r)));
+}
+
+.neb-glyph {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  transform: translate(-50%, -50%) rotate(var(--back));
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 2.1cqw, 13px);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+  will-change: transform;
+}
+
+.neb-glyph[data-tone='cyan'] {
+  color: var(--color-cyan);
+  text-shadow: 0 0 8px rgb(46 230 255 / 0.55);
+}
+
+.neb-glyph[data-tone='blue'] {
+  color: var(--color-primary);
+  text-shadow: 0 0 8px rgb(77 124 255 / 0.55);
+}
+
+.neb-glyph[data-tone='violet'] {
+  color: var(--color-violet);
+  text-shadow: 0 0 8px rgb(157 92 255 / 0.5);
+}
+
+.neb-glyph[data-tone='text'] {
+  color: var(--color-text);
+  text-shadow: 0 0 10px rgb(233 237 251 / 0.35);
+}
+
+.neb-glyph[data-tone='dim'] {
+  color: var(--color-syn-dim);
+  text-shadow: none;
+}
+
+/* Cincin kawat + jejak cahaya, ikut miring dan berputar bersama orbit. */
+.neb-trail {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Debu holografis: partikel kecil yang menyala bergantian. */
+.neb-mote {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--mote, var(--color-cyan));
+  box-shadow: 0 0 6px var(--mote, var(--color-cyan));
+  animation:
+    neb-twinkle var(--dur) ease-in-out infinite,
+    neb-float var(--dur) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+  pointer-events: none;
+}
+
+/* Sapuan radar: satu garis cahaya melintas di atas nebula. */
+.neb-sweep {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.neb-sweep::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  height: 22%;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgb(120 200 255 / 0.07) 45%,
+    rgb(160 220 255 / 0.11) 50%,
+    rgb(120 200 255 / 0.07) 55%,
+    transparent
+  );
+  animation: neb-scan 11s linear infinite;
+  will-change: transform;
+}
+
+/* Inti hologram: sphere + wireframe berputar + glyph < /> */
+.neb-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 42%;
+  aspect-ratio: 1 / 1;
+  /* Dipakai `transform`, bukan properti `translate`, karena minifier CSS
+     membuang `translate` pada elemen preserve-3d. */
+  transform: translate(-50%, -50%) translateZ(-56px);
+  transform-style: preserve-3d;
+}
+
+.neb-core-shell {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle at 34% 28%,
+      rgb(255 255 255 / 0.9) 0%,
+      var(--color-cyan) 16%,
+      var(--color-primary) 40%,
+      var(--color-violet) 62%,
+      rgb(6 8 18 / 0.9) 84%
+    );
+  box-shadow:
+    0 0 34px rgb(77 124 255 / 0.5),
+    0 0 90px rgb(157 92 255 / 0.32),
+    inset 0 0 34px rgb(255 255 255 / 0.22);
+  animation: neb-fade 5.5s ease-in-out infinite;
+}
+
+.neb-core-halo {
+  position: absolute;
+  inset: -46%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgb(77 124 255 / 0.42), transparent 62%);
+  filter: blur(20px);
+  animation: neb-breathe 6.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.neb-core-ring {
+  position: absolute;
+  inset: -22%;
+  border: 1px solid rgb(120 190 255 / 0.3);
+  border-radius: 50%;
+  animation: neb-core-spin-b var(--dur) linear infinite;
+}
+
+.neb-core-ring[data-variant='a'] {
+  animation-name: neb-core-spin-a;
+}
+
+.neb-core-ring[data-variant='b'] {
+  animation-name: neb-core-spin-b;
+}
+
+.neb-core-ring[data-dir='reverse'] {
+  animation-direction: reverse;
+}
+
+.neb-holo {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: #f2f7ff;
+  text-shadow:
+    0 0 12px rgb(46 230 255 / 0.9),
+    0 0 34px rgb(77 124 255 / 0.7);
+  animation: holo-glitch 7s steps(1, end) infinite;
+}
+
+.neb-holo::before,
+.neb-holo::after {
+  content: attr(data-glyph);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.neb-holo::before {
+  color: var(--color-cyan);
+  transform: translateX(-1.5px);
+  opacity: 0.5;
+}
+
+.neb-holo::after {
+  color: var(--color-violet);
+  transform: translateX(1.5px);
+  opacity: 0.5;
+}
+
+/* Lencana teknologi: glass cube melayang di sekeliling nebula. */
+.neb-chip-field {
+  perspective: 720px;
+  perspective-origin: 50% 50%;
+}
+
+.neb-chip {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.55rem;
+  border: 1px solid var(--color-glass-line);
+  border-radius: var(--radius-chip);
+  background: linear-gradient(
+    160deg,
+    rgb(150 180 255 / 0.14),
+    rgb(10 14 28 / 0.72)
+  );
+  backdrop-filter: blur(6px);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--color-text);
+  white-space: nowrap;
+  box-shadow:
+    0 10px 24px -18px rgb(0 0 0 / 0.9),
+    0 1px 0 0 rgb(255 255 255 / 0.07) inset;
+  animation: neb-drift var(--dur) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+  will-change: transform;
+}
+
+.neb-chip::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  background: var(--dot, var(--color-primary));
+  box-shadow: 0 0 8px var(--dot, var(--color-primary));
+}
+
+.neb-chip span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Bintang + debu digital: dua lapis radial-gradient yang di-translate,
+   nol elemen DOM dan nol repaint. */
+.starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.starfield::before,
+.starfield::after {
+  content: '';
+  position: absolute;
+  /* Sisi 18% lebih lebar dari viewport: cukup untuk translate 2.5rem tanpa
+     celah di tepi layar pada 320px. */
+  inset: -15% -18%;
+  background-repeat: repeat;
+}
+
+.starfield::before {
+  background-image:
+    radial-gradient(1.2px 1.2px at 20% 30%, rgb(220 235 255 / 0.9), transparent),
+    radial-gradient(1px 1px at 70% 12%, rgb(160 190 255 / 0.7), transparent),
+    radial-gradient(1.4px 1.4px at 45% 78%, rgb(46 230 255 / 0.55), transparent),
+    radial-gradient(1px 1px at 88% 62%, rgb(255 255 255 / 0.65), transparent),
+    radial-gradient(1px 1px at 12% 66%, rgb(157 92 255 / 0.6), transparent);
+  background-size: 22rem 22rem;
+  animation: star-drift 190s linear infinite;
+}
+
+.starfield::after {
+  background-image:
+    radial-gradient(1px 1px at 33% 55%, rgb(255 255 255 / 0.5), transparent),
+    radial-gradient(1.4px 1.4px at 62% 22%, rgb(46 230 255 / 0.4), transparent),
+    radial-gradient(1px 1px at 8% 88%, rgb(180 200 255 / 0.45), transparent),
+    radial-gradient(1px 1px at 91% 34%, rgb(157 92 255 / 0.45), transparent);
+  background-size: 13rem 13rem;
+  animation: star-drift 120s linear infinite reverse;
+  opacity: 0.7;
+}
+
+/* Aura warna besar di belakang konten. */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.aurora::before,
+.aurora::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+}
+
+.aurora::before {
+  top: -18vh;
+  right: -12vw;
+  width: min(62vw, 780px);
+  aspect-ratio: 1 / 1;
+  background: radial-gradient(circle, rgb(77 124 255 / 0.24), transparent 68%);
+}
+
+.aurora::after {
+  bottom: -24vh;
+  left: -16vw;
+  width: min(58vw, 720px);
+  aspect-ratio: 1 / 1;
+  background: radial-gradient(circle, rgb(157 92 255 / 0.18), transparent 68%);
+}
+
+.scanlines {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 3px,
+    rgb(120 170 255 / 0.035) 3px 4px
+  );
+  opacity: 0.55;
+}
+
+.cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 460px;
+  height: 460px;
+  margin: -230px 0 0 -230px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle, rgb(77 124 255 / 0.1), transparent 62%);
+  transition: opacity 0.5s ease;
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------------------- */
+
+@layer base {
+  html {
+    scroll-padding-top: 6rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+  }
+
+  ::selection {
+    background-color: var(--color-sel);
+    color: var(--color-text);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-cyan);
+    outline-offset: 2px;
+  }
+
+  html {
+    scrollbar-color: var(--color-line) transparent;
+  }
+
+  dialog::backdrop {
+    background-color: color-mix(in oklab, var(--color-bg) 82%, transparent);
+    backdrop-filter: blur(4px);
+  }
+}
+
+@layer components {
+  /* Panel kaca untuk kartu. Sengaja TANPA backdrop-filter: ada puluhan kartu
+     di halaman dan setiap backdrop-filter memaksa browser membaca ulang latar
+     tiap frame. Gradien semi transparan + garis rambut memberi kesan kaca yang
+     sama dengan jauh lebih murah. Blur hanya dipakai di navbar, drawer, dialog,
+     dan lencana nebula. */
+  .glass {
+    background: linear-gradient(
+      158deg,
+      var(--color-glass-2),
+      color-mix(in oklab, var(--color-surface) 88%, transparent)
+    );
+    border: 1px solid var(--color-glass-line);
+  }
+
+  .glass-flat {
+    background: var(--color-glass);
+    border: 1px solid var(--color-glass-line);
+  }
+
+  /* Garis dekoratif terminal: $/ │ dengan warna aksen. */
+  .rule {
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--color-glass-line) 12%,
+      var(--color-glass-line) 88%,
+      transparent
+    );
+  }
+}
+
+@utility bg-grid {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-line) 72%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--color-line) 72%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 48px 48px;
+}
+
+@utility bg-grid-fine {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in oklab, var(--color-line) 55%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--color-line) 55%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 14px 14px;
+}
+
+@utility bg-brand {
+  background-image: linear-gradient(100deg, var(--color-primary), var(--color-violet));
+}
+
+@utility bg-brand-soft {
+  background-image: linear-gradient(
+    140deg,
+    color-mix(in oklab, var(--color-primary) 22%, transparent),
+    color-mix(in oklab, var(--color-violet) 16%, transparent)
+  );
+}
+
+@utility glow-primary {
+  box-shadow:
+    0 10px 34px -14px color-mix(in oklab, var(--color-primary) 70%, transparent),
+    0 1px 0 0 rgb(255 255 255 / 0.07) inset;
+}
+
+@utility glow-primary-lg {
+  box-shadow:
+    0 16px 46px -14px color-mix(in oklab, var(--color-primary) 85%, transparent),
+    0 1px 0 0 rgb(255 255 255 / 0.09) inset;
+}
+
+@utility glow-ring {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--color-cyan) 45%, transparent),
+    0 0 26px -6px color-mix(in oklab, var(--color-primary) 55%, transparent);
+}
+
+@utility text-gradient {  background-image: linear-gradient(
+    102deg,
+    var(--color-primary) 0%,
+    var(--color-violet) 46%,
+    var(--color-cyan) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+@utility text-gradient-soft {
+  background-image: linear-gradient(
+    102deg,
+    var(--color-text) 0%,
+    var(--color-primary) 58%,
+    var(--color-violet) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+@utility mask-fade-b {
+  -webkit-mask-image: linear-gradient(to bottom, black 24%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 24%, transparent 100%);
+}
+
+@utility mask-fade-radial {
+  -webkit-mask-image: radial-gradient(closest-side, black 40%, transparent 100%);
+  mask-image: radial-gradient(closest-side, black 40%, transparent 100%);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Reduced motion: matikan seluruh animasi tak terbatas, tapi tetap tampil utuh.
+   Posisikan tiap token di titik orbit yang wajar supaya nebula tidak kosong. */
+@media (prefers-reduced-motion: reduce) {
+  .neb-ring,
+  .neb-core-ring,
+  .neb-aura,
+  .neb-core-shell,
+  .neb-core-halo,
+  .neb-chip,
+  .neb-mote,
+  .neb-sweep::before,
+  .starfield::before,
+  .starfield::after {
+    animation: none !important;
+  }
+
+  .neb-holo {
+    animation: none !important;
+  }
+}
